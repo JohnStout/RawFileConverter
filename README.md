@@ -1,6 +1,6 @@
 # RawFileConverter
 
-Code to convert .RAW file outputs (from thorlabs 2P setup) to .tif file using memory efficient techniques.
+Code to convert .RAW file outputs (from thorlabs 2P setup) to .tif file using memory efficient techniques. This code is built for ThorLabs .xml Experiment files and should probably be renamed to `ThorLabsRawFileConverter` 
 
 **This code is under development!**
 
