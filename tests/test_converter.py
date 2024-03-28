@@ -38,6 +38,9 @@ test3(self)
 mat = tifffile.memmap(r"C:\Users\spell\Desktop\John\cleanLines1_img\img.tif")
 pyt = tifffile.memmap(r"C:\Users\spell\Desktop\John\cleanLines1_img\img_mmap_maxproj_z.tif")
 
+plt.plot(mat[:,10,10],linewidth=0.5)
+plt.plot(pyt[:,10,10],linewidth=0.5)
+
 #
 matfile = tifffile.memmap(r"D:\Maya\cat2.0\PFC\A02\cleanLines1_img\img.tif")
 plt.imshow(matfile[-1])

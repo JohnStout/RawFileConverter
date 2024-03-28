@@ -1,5 +1,10 @@
 # This code is a RAM efficient version of file converting
 #
+# RAM friendly mechanisms:
+#   -> memory mapping
+#   -> chunk saving, then cleaning memory
+#   -> Multi-file save (splits file into separate files) - NOT SUPPORTED
+#
 # Essentially, we map a file to disk via memory mapping, then write chunks of data to memory.
 # The chunks of data take up memory and so we continuously delete what we previously used to conserve memory.
 #
@@ -19,6 +24,8 @@ import tifffile as tf
 # TODO: Validate with single plane data
 # TODO: Implement NWB as an option?
 # TODO: These data are inverted relative to MATLABs version. Why?
+# TODO: CHECK ON THIS - SOMETIMES LOADING INVERTS DATA: Consider inversion of data to match MATLABs output (rot90(fliplr(frame)))
+# TODO: Implement a split_file mechanism to save out multiple files
 
 # Minimal ram usage
 class RawToTif():
@@ -88,7 +95,7 @@ class RawToTif():
 
         print("rootpath:",self.rootpath)
 
-    def convert(self, method: str = 'suite2p', split_file = True):
+    def convert(self, method: str = 'suite2p'):
 
         '''
         Mechanism to convert data
@@ -188,6 +195,9 @@ class RawToTif():
                 idx_load = self.idx_offset_np[framesi:framesi+chunk_samples]
                 for idxi in idx_load:
                     np_mem_list.append(np.memmap(self.filepath, dtype='int16', offset=idxi, mode='r', shape=(x,y)))
+                
+                # inversion
+                #np_mem_list = [np.rot90(np.fliplr(i)) for i in np_mem_list]
 
                 # chunky write :) - no need to worry about the remainder bc slicing takes care of it!
                 im[framesi:framesi+chunk_samples,:,:] = np_mem_list
@@ -253,6 +263,12 @@ class RawToTif():
                 #ax[3].set_title("Max_proj")
 
         print("Completed conversion")
+
+    def split_file():
+        '''
+        This function will be called internally to split the .raw file into multiple separate .raw files which then repopulate fname to then write out the data as needed
+        '''
+        pass
 
 class RawToNWB(RawToTif):
     # use the __init__ from RawToTif. We can write as np or tif to nwb
